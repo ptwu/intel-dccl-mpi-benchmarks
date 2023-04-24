@@ -60,6 +60,7 @@ goods and services.
 #include "benchmark_suite.h"
 #include "MT_types.h"
 #include "MT_benchmark.h"
+#include "DCCL_allreduce_wrapper.h"
 
 #define WITH_VECTOR
 
@@ -534,6 +535,27 @@ MT_COLLECTIVE_BEGIN(allreduce) {
 }
 
 DECLARE_INHERITED_BENCHMARKMT(BenchmarkSuite<BS_MT>, mt_allreduce, AllReduceMT)
+{
+    flags.insert(COLLECTIVE);
+    flags.insert(SEPARATE_MEASURING);
+    flags.insert(OUT_BYTES);
+    flags.insert(OUT_REPEAT);
+    flags.insert(OUT_TIME_MIN);
+    flags.insert(OUT_TIME_MAX);
+    flags.insert(OUT_TIME_AVG);
+}
+
+MT_COLLECTIVE_BEGIN(dccl_allreduce) {
+    INIT_ARRAY(1, in, (rank+1)*i);
+    INIT_ARRAY(1, out, -1);
+    MT_CYCLE_BEGIN
+        dccl_wrapper.DCCL_Allreduce(in, out, count, type, comm);
+    MT_CYCLE_END
+    CHECK_ARRAY(true, out, size*(size+1)*i/2);
+    return 1;
+}
+
+DECLARE_INHERITED_BENCHMARKMT(BenchmarkSuite<BS_MT>, mt_dccl_allreduce, DcclAllReduceMT)
 {
     flags.insert(COLLECTIVE);
     flags.insert(SEPARATE_MEASURING);
