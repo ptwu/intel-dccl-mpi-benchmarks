@@ -69,8 +69,6 @@ using namespace std;
 #include "MT_types.h"
 #include "DCCL_allreduce_wrapper.h"
 
-DCCLAllReduceWrapper dccl_wrapper;
-
 template <typename T>
 class Allocator {
     protected:

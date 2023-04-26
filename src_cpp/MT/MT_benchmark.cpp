@@ -549,7 +549,7 @@ MT_COLLECTIVE_BEGIN(dccl_allreduce) {
     INIT_ARRAY(1, in, (rank+1)*i);
     INIT_ARRAY(1, out, -1);
     MT_CYCLE_BEGIN
-        dccl_wrapper.DCCL_Allreduce(in, out, count, type, comm);
+        DCCLAllReduceWrapper::singleton.DCCL_Allreduce(in, out, count, type, comm);
     MT_CYCLE_END
     CHECK_ARRAY(true, out, size*(size+1)*i/2);
     return 1;
