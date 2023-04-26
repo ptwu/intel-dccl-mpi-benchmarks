@@ -51,8 +51,10 @@
 override CPPFLAGS += -DMT
 override CPPFLAGS += -IMT
 
-BECHMARK_SUITE_SRC += MT/MT_suite.cpp MT/MT_benchmark.cpp
+override LDLIBS += -ldccl
 
-HEADERS += MT/MT_benchmark.h 
+BECHMARK_SUITE_SRC += MT/MT_suite.cpp MT/MT_benchmark.cpp MT/DCCL_allreduce_wrapper.cpp
+
+HEADERS += MT/MT_benchmark.h MT/DCCL_allreduce_wrapper.h
 
 WITH_OPENMP = 1
