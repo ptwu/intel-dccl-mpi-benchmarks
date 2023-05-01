@@ -50,7 +50,6 @@
 
 override CPPFLAGS += -DMT
 override CPPFLAGS += -IMT
-
 override LDLIBS += -ldccl
 
 BECHMARK_SUITE_SRC += MT/MT_suite.cpp MT/MT_benchmark.cpp MT/DCCL_allreduce_wrapper.cpp
