@@ -446,36 +446,36 @@ class BenchmarkMTBase : public Benchmark {
             time_max /= divider;
             if (nresults) {
                 if (ninvocations++ == 0) {
-                    cout << endl;
-                    cout << "#-----------------------------------------------------------------------------" << endl;
-                    cout << "# Benchmarking " << get_name() << endl;
-                    cout << "# #processes = " << nresults / num_threads << " (threads: " << num_threads << ")" << endl;
-                    if (flags.count(WINDOW))
-                        cout << "# window_size = " << window_size << endl;
-                    cout << "#-----------------------------------------------------------------------------" << endl;
+                    // cout << endl;
+                    // cout << "#-----------------------------------------------------------------------------" << endl;
+                    // cout << "# Benchmarking " << get_name() << endl;
+                    // cout << "# #processes = " << nresults / num_threads << " (threads: " << num_threads << ")" << endl;
+                    // if (flags.count(WINDOW))
+                    // cout << "# window_size = " << window_size << endl;
+                    // cout << "#-----------------------------------------------------------------------------" << endl;
  
-                    if (flags.count(OUT_BYTES)) cout << out_field("#bytes"); //"#bytes";
-                    if (flags.count(OUT_REPEAT)) cout << out_field("#repetitions");
-                    if (flags.count(OUT_TIME_MIN)) cout << out_field("t_min[usec]");
-                    if (flags.count(OUT_TIME_MAX)) cout << out_field("t_max[usec]");
-                    if (flags.count(OUT_TIME_AVG)) cout << out_field("t_avg[usec]");
-                    if (flags.count(OUT_BW)) cout << out_field("Mbytes/sec");
-                    if (flags.count(OUT_BW_CUMULATIVE)) cout << out_field("Mbytes/sec");
-                    if (flags.count(OUT_MSGRATE)) cout << out_field("Msg/sec");
-                    if (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field("Msg/sec");
-                    cout << endl;
+                    // if (flags.count(OUT_BYTES)) cout << out_field("#bytes"); //"#bytes";
+                    // if (flags.count(OUT_REPEAT)) cout << out_field("#repetitions");
+                    // if (flags.count(OUT_TIME_MIN)) cout << out_field("t_min[usec]");
+                    // if (flags.count(OUT_TIME_MAX)) cout << out_field("t_max[usec]");
+                    // if (flags.count(OUT_TIME_AVG)) cout << out_field("t_avg[usec]");
+                    // (flags.count(OUT_BW)) cout << out_field("Mbytes/sec");
+                    // (flags.count(OUT_BW_CUMULATIVE)) cout << out_field("Mbytes/sec");
+                    // (flags.count(OUT_MSGRATE)) cout << out_field("Msg/sec");
+                    // (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field("Msg/sec");
+                    // cout << endl;
                 }
                 // NOTE: since we do weak scalability measurements, multiply the amount of data
                 size_t real_size = item.len * datatype_size * num_threads;
-                if (flags.count(OUT_BYTES)) cout << out_field(real_size);
-                if (flags.count(OUT_REPEAT)) cout << out_field(input[0].repeat);
-                if (flags.count(OUT_TIME_MIN)) cout << out_field(1e6 * time_min);
+                // if (flags.count(OUT_BYTES)) cout << out_field(real_size);
+                // if (flags.count(OUT_REPEAT)) cout << out_field(input[0].repeat);
+                // if (flags.count(OUT_TIME_MIN)) cout << out_field(1e6 * time_min);
                 if (flags.count(OUT_TIME_MAX)) cout << out_field(1e6 * time_max);
-                if (flags.count(OUT_TIME_AVG)) cout << out_field(1e6 * time_avg);
-                if (flags.count(OUT_BW)) cout << out_field((double)real_size * bw_multiplier / time_max / 1e6);
-                if (flags.count(OUT_BW_CUMULATIVE)) cout << out_field((double)real_size / (double)num_threads * bw_multiplier * (double)(nresults / 2) / time_max / 1e6);
-                if (flags.count(OUT_MSGRATE)) cout << out_field((int)(1.0 / time_avg));
-                if (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field((int)((double)(nresults / 2) / time_avg));
+                //if (flags.count(OUT_TIME_AVG)) cout << out_field(1e6 * time_avg);
+                //if (flags.count(OUT_BW)) cout << out_field((double)real_size * bw_multiplier / time_max / 1e6);
+                //if (flags.count(OUT_BW_CUMULATIVE)) cout << out_field((double)real_size / (double)num_threads * bw_multiplier * (double)(nresults / 2) / time_max / 1e6);
+                //if (flags.count(OUT_MSGRATE)) cout << out_field((int)(1.0 / time_avg));
+                //if (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field((int)((double)(nresults / 2) / time_avg));
                 cout << endl;
             }
             else {
