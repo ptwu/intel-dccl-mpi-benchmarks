@@ -1,5 +1,6 @@
 #include "DCCL_allreduce_wrapper.h"
 #include <dccl.hpp>
+#include <iostream>
 
 DCCLAllReduceWrapper DCCLAllReduceWrapper::singleton;
 
@@ -14,7 +15,7 @@ DCCLAllReduceWrapper::DCCLAllReduceWrapper() {
     }
 }
 
-int DCCLAllReduceWrapper::DCCL_Allreduce(void* in, void* out, std::size_t count, MPI_Datatype type, MPI_Comm comm) {
+int DCCLAllReduceWrapper::DCCL_Allreduce(void* in, void* out, int count, MPI_Datatype type, MPI_Comm comm) {
     ncclResult_t ret;
 
     ret = ncclAllReduce(reinterpret_cast<const void*>(in), out, count, ncclUint32, ncclSum, dccl_comm);
