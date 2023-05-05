@@ -17,6 +17,7 @@ DCCLAllReduceWrapper::DCCLAllReduceWrapper() {
 
 int DCCLAllReduceWrapper::DCCL_Allreduce(void* in, void* out, int count, MPI_Datatype type, MPI_Comm comm) {
     ncclResult_t ret;
+    std::cout << "COUNT: " << count << std::endl;
 
     ret = ncclAllReduce(reinterpret_cast<const void*>(in), out, count, ncclUint32, ncclSum, dccl_comm);
     return ret;

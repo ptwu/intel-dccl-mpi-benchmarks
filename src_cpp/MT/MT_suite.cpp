@@ -90,10 +90,10 @@ template <> bool BenchmarkSuite<BS_MT>::declare_args(args_parser &parser,
     parser.set_current_group(get_name());
     parser.add<int>("stride", 0);
     parser.add<int>("warmup",  100);
-    parser.add<int>("repeat", 1);
+    parser.add<int>("repeat", 100);
     parser.add<int>("window_size", 64);
     parser.add<std::string>("barrier", "on").set_caption("on|off|special");
-    parser.add_vector<int>("count", "1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768,65536,131072,262144").
+    parser.add_vector<int>("count", "1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768,65536,131072,262144,524288,1048576,2097152").
         set_mode(args_parser::option::APPLY_DEFAULTS_ONLY_WHEN_MISSING);
     parser.add<int>("malloc_align", 64);
     parser.add<std::string>("malloc_algo", "serial").set_caption("serial|continuous|parallel");
