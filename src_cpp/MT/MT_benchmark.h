@@ -55,6 +55,7 @@ goods and services.
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
+#include <numeric>
 
 #include "benchmark.h"
 
@@ -261,7 +262,7 @@ class BenchmarkMTBase : public Benchmark {
     int world_rank, world_size;
     public:
     virtual void init_flags() {}
-    virtual void run_instance(thread_local_data_t *input, int count, double &t, int &result) {
+    virtual void run_instance(thread_local_data_t *input, int count, double &t, int &result, std::vector<double>& times) {
         MPI_Comm comm = input->comm;
         int warmup = input->warmup, repeat = input->repeat;
         if (repeat <= 0) return;
@@ -279,44 +280,35 @@ class BenchmarkMTBase : public Benchmark {
 
         idata_local.threading.mode_multiple = mode_multiple;
 
-        barrier_func_t bfn;
-        switch (barrier_option) {
-            case BARROPT_NOBARRIER: bfn = no_barrier; break;
-            case BARROPT_NORMAL: 
-                if (mode_multiple) {
-                    bfn = omp_aware_barrier<normal_barrier>;
-                } else {
-                    bfn = normal_barrier;
-                }
-                break;
-            case BARROPT_SPECIAL:
-                if (mode_multiple) {
-                    bfn = omp_aware_barrier<special_barrier>;
-                } else {
-                    bfn = special_barrier;
-                }
-                break;
-            default: assert(0);
-        }
+        barrier_func_t bfn = no_barrier;
+    
         odata_local.checks.failures = 0;
-        if (flags.count(SEPARATE_MEASURING)) {
-            idata_local.barrier.fn_ptr = bfn;
-            if (flags.count(COLLECTIVE_VECTOR)) {
-                for (int i = 0; i < size; i++) {
-                    idata_local.collective_vector.cnt[i] = count;
-                    idata_local.collective_vector.displs[i] = count * i;
-                }
+        // if (flags.count(SEPARATE_MEASURING)) {
+        idata_local.barrier.fn_ptr = bfn;
+        if (flags.count(COLLECTIVE_VECTOR)) {
+            for (int i = 0; i < size; i++) {
+                idata_local.collective_vector.cnt[i] = count;
+                idata_local.collective_vector.displs[i] = count * i;
             }
-            odata_local.timing.time_ptr = &t;
-            result = fn_ptr(repeat, warmup, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
-        } else {
-            odata_local.timing.time_ptr = NULL;
-            fn_ptr(warmup, 0, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
-            bfn();
-            t = MPI_Wtime();
-            result = fn_ptr(repeat, 0, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
-            t = MPI_Wtime()-t;
         }
+        // for (int i = 0; i < &input[0]->repeat; i++) {
+        //     odata_local.timing.time_ptr = &t;
+        //     result = fn_ptr(1, warmup, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
+        //     times.push_back(*t);
+        // }
+        
+        // } else {
+
+        odata_local.timing.time_ptr = NULL;
+        fn_ptr(warmup, 0, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
+        for (int i = 0; i < input[0].repeat; i++) {
+            t = MPI_Wtime();
+            // Only repeat once, since we are doing this n times as in the enclosing loop above.
+            result = fn_ptr(1, 0, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
+            t = MPI_Wtime()-t;
+            times.push_back(t);
+        }
+        // }
         if (!result)
             t = 0;
             if (odata_local.checks.failures) {
@@ -404,34 +396,22 @@ class BenchmarkMTBase : public Benchmark {
         static int ninvocations = 0;
         double t, tavg = 0, tmin = 1e6, tmax = 0; 
         int nresults = 0;
-        if (mode_multiple) {
-        #pragma omp parallel default(shared)
-            {
-                double t_mp;
-                int result;
-                run_instance(&input[omp_get_thread_num()], item.len, t_mp, result);
-            #pragma omp critical
-                {
-                    tmax = max(tmax, t_mp);
-                    tmin = min(tmin, t_mp);
-                    tavg = tavg + t_mp;
-                    nresults += result;
-                }
-            }
-        } else {
-            run_instance(&input[0], item.len, t, nresults);
-            tavg = tmax = tmin = t;
+
+        int NUM_REPETITIONS = *(&input[0].repeat);
+
+        std::vector<double> times;
+        run_instance(&input[0], item.len, t, nresults, times);
+
+        for (int i = 0; i < times.size(); i++) {
+            tmax = std::max(tmax, times[i]);
+            tmin = std::min(tmin, times[i]);
         }
-        MPI_Allreduce(&tavg, &time_avg, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        MPI_Allreduce(&tmin, &time_min, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
-        MPI_Allreduce(&tmax, &time_max, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-        MPI_Allreduce(MPI_IN_PLACE, &nresults, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-        if (nresults) {
-            time_avg /= (double)nresults;
-        }
-        time_avg /= (double)input[0].repeat;
-        time_min /= (double)input[0].repeat;
-        time_max /= (double)input[0].repeat;
+        
+        tavg = 1.0 * std::accumulate(times.begin(), times.end(), 0.0) / times.size();
+
+        time_avg = tavg;
+        time_min = tmin;
+        time_max = tmax;
         if (world_rank == 0) {
             double divider = 1.0, bw_multiplier = 1.0;
             if (flags.count(TIME_DIVIDE_BY_2)) divider *= 2.0;
@@ -446,36 +426,36 @@ class BenchmarkMTBase : public Benchmark {
             time_max /= divider;
             if (nresults) {
                 if (ninvocations++ == 0) {
-                    // cout << endl;
-                    // cout << "#-----------------------------------------------------------------------------" << endl;
-                    // cout << "# Benchmarking " << get_name() << endl;
-                    // cout << "# #processes = " << nresults / num_threads << " (threads: " << num_threads << ")" << endl;
-                    // if (flags.count(WINDOW))
-                    // cout << "# window_size = " << window_size << endl;
-                    // cout << "#-----------------------------------------------------------------------------" << endl;
+                    cout << endl;
+                    cout << "#-----------------------------------------------------------------------------" << endl;
+                    cout << "# Benchmarking " << get_name() << endl;
+                    cout << "# #processes = " << nresults / num_threads << " (threads: " << num_threads << ")" << endl;
+                    if (flags.count(WINDOW))
+                    cout << "# window_size = " << window_size << endl;
+                    cout << "#-----------------------------------------------------------------------------" << endl;
  
-                    // if (flags.count(OUT_BYTES)) cout << out_field("#bytes"); //"#bytes";
-                    // if (flags.count(OUT_REPEAT)) cout << out_field("#repetitions");
-                    // if (flags.count(OUT_TIME_MIN)) cout << out_field("t_min[usec]");
-                    // if (flags.count(OUT_TIME_MAX)) cout << out_field("t_max[usec]");
-                    // if (flags.count(OUT_TIME_AVG)) cout << out_field("t_avg[usec]");
-                    // (flags.count(OUT_BW)) cout << out_field("Mbytes/sec");
-                    // (flags.count(OUT_BW_CUMULATIVE)) cout << out_field("Mbytes/sec");
-                    // (flags.count(OUT_MSGRATE)) cout << out_field("Msg/sec");
-                    // (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field("Msg/sec");
-                    // cout << endl;
+                    if (flags.count(OUT_BYTES)) cout << out_field("#bytes"); //"#bytes";
+                    if (flags.count(OUT_REPEAT)) cout << out_field("#repetitions");
+                    if (flags.count(OUT_TIME_MIN)) cout << out_field("t_min[usec]");
+                    if (flags.count(OUT_TIME_MAX)) cout << out_field("t_max[usec]");
+                    if (flags.count(OUT_TIME_AVG)) cout << out_field("t_avg[usec]");
+                    if (flags.count(OUT_BW)) cout << out_field("Mbytes/sec");
+                    if (flags.count(OUT_BW_CUMULATIVE)) cout << out_field("Mbytes/sec");
+                    if (flags.count(OUT_MSGRATE)) cout << out_field("Msg/sec");
+                    if (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field("Msg/sec");
+                    cout << endl;
                 }
                 // NOTE: since we do weak scalability measurements, multiply the amount of data
                 size_t real_size = item.len * datatype_size * num_threads;
-                // if (flags.count(OUT_BYTES)) cout << out_field(real_size);
-                // if (flags.count(OUT_REPEAT)) cout << out_field(input[0].repeat);
-                // if (flags.count(OUT_TIME_MIN)) cout << out_field(1e6 * time_min);
+                if (flags.count(OUT_BYTES)) cout << out_field(real_size);
+                if (flags.count(OUT_REPEAT)) cout << out_field(NUM_REPETITIONS);
+                if (flags.count(OUT_TIME_MIN)) cout << out_field(1e6 * time_min);
                 if (flags.count(OUT_TIME_MAX)) cout << out_field(1e6 * time_max);
-                //if (flags.count(OUT_TIME_AVG)) cout << out_field(1e6 * time_avg);
-                //if (flags.count(OUT_BW)) cout << out_field((double)real_size * bw_multiplier / time_max / 1e6);
-                //if (flags.count(OUT_BW_CUMULATIVE)) cout << out_field((double)real_size / (double)num_threads * bw_multiplier * (double)(nresults / 2) / time_max / 1e6);
-                //if (flags.count(OUT_MSGRATE)) cout << out_field((int)(1.0 / time_avg));
-                //if (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field((int)((double)(nresults / 2) / time_avg));
+                if (flags.count(OUT_TIME_AVG)) cout << out_field(1e6 * time_avg);
+                if (flags.count(OUT_BW)) cout << out_field((double)real_size * bw_multiplier / time_max / 1e6);
+                if (flags.count(OUT_BW_CUMULATIVE)) cout << out_field((double)real_size / (double)num_threads * bw_multiplier * (double)(nresults / 2) / time_max / 1e6);
+                if (flags.count(OUT_MSGRATE)) cout << out_field((int)(1.0 / time_avg));
+                if (flags.count(OUT_MSGRATE_CUMMULATIVE)) cout << out_field((int)((double)(nresults / 2) / time_avg));
                 cout << endl;
             }
             else {

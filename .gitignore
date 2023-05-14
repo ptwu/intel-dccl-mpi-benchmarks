@@ -1,5 +1,4 @@
 *.o
 IMB-*
 .vscode
-cfg
 *.gch
