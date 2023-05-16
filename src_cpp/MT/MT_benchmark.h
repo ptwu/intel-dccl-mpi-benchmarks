@@ -54,8 +54,10 @@ goods and services.
 
 #include <string.h>
 #include <stdio.h>
+#include <float.h>
 #include <iostream>
 #include <numeric>
+#include <unistd.h>
 
 #include "benchmark.h"
 
@@ -182,6 +184,7 @@ struct output_benchmark_data {
     struct {
         int failures;
     } checks;
+    double execution_time;
 };
 
 typedef int (*mt_benchmark_func_t)(int repeat, int skip, void *in, void *out, int count,
@@ -271,13 +274,20 @@ class BenchmarkMTBase : public Benchmark {
         MPI_Comm_size(comm, &size);
         void *in = a[omp_get_thread_num()];
         void *out = b[omp_get_thread_num()];
+        // void* in = nullptr;
+        // void* out = nullptr;
+        // uint64_t cacheline_sz = sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
+
+        // if (posix_memalign(&in,cacheline_sz,count*4) || posix_memalign(&out,cacheline_sz,count*4)) {
+        //     std::cerr << "Failed to allocate " << count * 4 << " bytes" << std::endl;
+        // }
         input_benchmark_data &idata_local = *idata[omp_get_thread_num()];
         output_benchmark_data &odata_local = *odata[omp_get_thread_num()];
         idata_local.collective.root = 0;
         idata_local.pt2pt.stride = stride;
 
         idata_local.checks.check = do_checks;
-
+        
         idata_local.threading.mode_multiple = mode_multiple;
 
         barrier_func_t bfn = no_barrier;
@@ -300,13 +310,13 @@ class BenchmarkMTBase : public Benchmark {
         // } else {
 
         odata_local.timing.time_ptr = NULL;
-        fn_ptr(warmup, 0, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
+        for (int i = 0; i < warmup; i++) {
+            fn_ptr(1, 0, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
+        }
         for (int i = 0; i < input[0].repeat; i++) {
-            t = MPI_Wtime();
             // Only repeat once, since we are doing this n times as in the enclosing loop above.
             result = fn_ptr(1, 0, in, out, count, datatype, comm, rank, size, &idata_local, &odata_local);
-            t = MPI_Wtime()-t;
-            times.push_back(t);
+            times.push_back(odata_local.execution_time);
         }
         // }
         if (!result)
@@ -394,7 +404,7 @@ class BenchmarkMTBase : public Benchmark {
   }
     virtual void run(const scope_item &item) { 
         static int ninvocations = 0;
-        double t, tavg = 0, tmin = 1e6, tmax = 0; 
+        double t, tavg = 0, tmin = DBL_MAX, tmax = 0; 
         int nresults = 0;
 
         int NUM_REPETITIONS = *(&input[0].repeat);
@@ -449,9 +459,9 @@ class BenchmarkMTBase : public Benchmark {
                 size_t real_size = item.len * datatype_size * num_threads;
                 if (flags.count(OUT_BYTES)) cout << out_field(real_size);
                 if (flags.count(OUT_REPEAT)) cout << out_field(NUM_REPETITIONS);
-                if (flags.count(OUT_TIME_MIN)) cout << out_field(1e6 * time_min);
-                if (flags.count(OUT_TIME_MAX)) cout << out_field(1e6 * time_max);
-                if (flags.count(OUT_TIME_AVG)) cout << out_field(1e6 * time_avg);
+                if (flags.count(OUT_TIME_MIN)) cout << out_field(time_min / 1000);
+                if (flags.count(OUT_TIME_MAX)) cout << out_field(time_max / 1000);
+                if (flags.count(OUT_TIME_AVG)) cout << out_field(time_avg / 1000);
                 if (flags.count(OUT_BW)) cout << out_field((double)real_size * bw_multiplier / time_max / 1e6);
                 if (flags.count(OUT_BW_CUMULATIVE)) cout << out_field((double)real_size / (double)num_threads * bw_multiplier * (double)(nresults / 2) / time_max / 1e6);
                 if (flags.count(OUT_MSGRATE)) cout << out_field((int)(1.0 / time_avg));

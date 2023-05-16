@@ -68,6 +68,10 @@ extern "C" {
 
 #include "helper_IMB_functions.h"
 
+#include "IMB_prototypes_cpp.h"
+#include "dccl_allreduce_wrapper.h"
+#include "IMB_dcclallreduce.h"
+
 using namespace std;
 
 #define BENCHMARK(BMRK_FN, BMRK_NAME) \
@@ -176,6 +180,16 @@ BENCHMARK(IMB_exchange, Exchange)
 }
 
 BENCHMARK(IMB_allreduce, Allreduce)
+{
+    descr->flags.insert(DEFAULT);
+    descr->flags.insert(COLLECTIVE);
+    descr->flags.insert(REDUCTION);
+    descr->flags.insert(SENDBUF_SIZE_I);
+    descr->flags.insert(RECVBUF_SIZE_I);
+    return true;
+}
+
+BENCHMARK(IMB_dcclallreduce, Dcclallreduce)
 {
     descr->flags.insert(DEFAULT);
     descr->flags.insert(COLLECTIVE);
