@@ -51,8 +51,11 @@
 include helpers/Makefile.*.mk
 
 override CPPFLAGS += -DMPI1
+override LDLIBS += -ldccl
 
-BECHMARK_SUITE_LOCAL_SRC += MPI1/MPI1_suite.cpp MPI1/MPI1_benchmark.cpp
+override HEADERS += MPI1/dccl_allreduce_wrapper.h MPI1/IMB_prototypes_cpp.h MPI1/IMB_dcclallreduce.h
+
+BECHMARK_SUITE_LOCAL_SRC += MPI1/MPI1_suite.cpp MPI1/MPI1_benchmark.cpp MPI1/dccl_allreduce_wrapper.cpp MPI1/IMB_dcclallreduce.cpp
 C_SRC = $(C_SRC_DIR)/IMB_allgather.c \
 $(C_SRC_DIR)/IMB_allgatherv.c \
 $(C_SRC_DIR)/IMB_allreduce.c \

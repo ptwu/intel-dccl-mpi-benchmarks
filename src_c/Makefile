@@ -56,7 +56,7 @@ BUILDDIR=build_$(TARGET)
 
 ifeq "$(TARGET)" "MPI1"
 SRC = IMB_2018.c IMB_utils.c IMB_declare.c  IMB_init.c IMB_mem_manager.c IMB_parse_name_mpi1.c  IMB_benchlist.c IMB_strgs.c \
-IMB_err_handler.c IMB_g_info.c  IMB_warm_up.c IMB_output.c \
+IMB_err_handler.c IMB_g_info.c  IMB_warm_up.c IMB_output.c dccl_allreduce_wrapper.cpp dccl_entrypoint.cpp \
 IMB_pingpong.c IMB_pingping.c IMB_allreduce.c IMB_reduce_scatter.c IMB_reduce.c IMB_exchange.c IMB_bcast.c IMB_barrier.c IMB_allgather.c IMB_allgatherv.c IMB_gather.c IMB_gatherv.c IMB_scatter.c IMB_scatterv.c IMB_alltoall.c IMB_alltoallv.c IMB_sendrecv.c IMB_init_transfer.c IMB_chk_diff.c IMB_cpu_exploit.c IMB_bandwidth.c
 endif 
 ifeq "$(TARGET)" "EXT"

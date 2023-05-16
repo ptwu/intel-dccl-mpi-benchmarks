@@ -214,4 +214,78 @@
 [23:56:37.066064] [derecho_debug] [Thread 2559350] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
 [23:56:37.066069] [derecho_debug] [Thread 2559350] [error] post_remote_write(4) failed with return code -14
 [23:56:37.266063] [derecho_debug] [Thread 2559350] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
-[23:56:37.266067] [derecho_debug] [Thread 2559350] [error] post_remote_write(4) fa
+[23:56:37.266067] [derecho_debug] [Thread 2559350] [error] post_remote_write(4) fa[15:51:52.134749] [derecho_debug] [Thread 3170381] [error] Failed to exchange connection management info with node 2
+[15:51:52.156371] [derecho_debug] [Thread 3170381] [error] LibFabric error! Return code = -16. Operation description: close domain
+[15:51:52.156419] [derecho_debug] [Thread 3170381] [error] LibFabric error! Return code = -16. Operation description: close fabric
+[18:01:49.276103] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:49.276214] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:49.476072] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:49.476082] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:49.676071] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:49.676080] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:49.876067] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:49.876072] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:50.076068] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:50.076085] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:50.276065] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:50.276069] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:50.476073] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:50.476089] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:50.676065] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:50.676070] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:50.876068] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:50.876075] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:51.076066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:51.076076] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:51.276075] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:51.276088] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:51.476066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:51.476073] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:51.676065] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:51.676068] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:51.876058] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:51.876063] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:52.076067] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:52.076081] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:52.276066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:52.276071] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:52.476066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:52.476073] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:52.676068] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:52.676075] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:52.876066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:52.876072] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:53.076066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:53.076077] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:53.276066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:53.276071] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:53.476065] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:53.476070] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:53.676065] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:53.676069] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:53.876066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:53.876071] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:54.076072] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:54.076088] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:54.276066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:54.276071] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:54.476066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:54.476073] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:54.676065] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:54.676070] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:54.876066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:54.876073] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:55.076069] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:55.076086] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:55.282077] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:55.282090] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:55.482066] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:55.482071] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:55.682068] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:55.682074] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:55.882058] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:55.882063] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:56.082065] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:56.082074] [derecho_debug] [Thread 3325252] [error] post_remote_write(4) failed with return code -14
+[18:01:56.282069] [derecho_debug] [Thread 3325252] [warning] lf.cpp: remote has failed, post_remote_send() does nothing.
+[18:01:56.282073] [derecho_debug] [Thread 3325252] [erro

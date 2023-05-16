@@ -70,6 +70,9 @@ extern "C" {
 #include "IMB_prototypes.h"
 }
 
+#include "IMB_prototypes_cpp.h"
+#include "dccl_allreduce_wrapper.h"
+#include "IMB_dcclallreduce.h"
 #include "helper_IMB_functions.h"
 
 using namespace std;
@@ -734,6 +737,18 @@ template <> bool BenchmarkSuite<BS_MPI1>::prepare(const args_parser &parser, con
     int argc = 0;
     IMB_basic_input(&c_info, &BList, &ITERATIONS, &argc, (char ***)argv, &glob.NP_min);
 #endif    
+
+  
+    // struct Bench *BList;
+    // char *argv[] = { "" };
+    // int argc = 0;
+    // strcpy(BList->name, "Dcclallreduce");
+    // BList->Benchmark = IMB_dcclallreduce;
+    // BList->RUN_MODES[0].type = Collective;
+    // *BList->bench_comments = "";
+    // BList->reduction = 1;
+
+    // IMB_basic_input(&c_info, &BList, &ITERATIONS, &argc, (char ***)argv, &glob.NP_min);
 
     if (c_info.w_rank == 0 ) {
         IMB_general_info();

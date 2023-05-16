@@ -1,4 +1,4 @@
-#include "DCCL_allreduce_wrapper.h"
+#include "dccl_allreduce_wrapper.h"
 #include <dccl.hpp>
 #include <iostream>
 

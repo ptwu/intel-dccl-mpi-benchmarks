@@ -54,6 +54,7 @@ goods and services.
 #include <map>
 #include <set>
 #include <iostream>
+#include <derecho/utils/time.h>
 
 #include "benchmark_suites_collection.h"
 #include "utils.h"
@@ -547,9 +548,10 @@ DECLARE_INHERITED_BENCHMARKMT(BenchmarkSuite<BS_MT>, mt_allreduce, AllReduceMT)
 MT_COLLECTIVE_BEGIN(dccl_allreduce) {
     INIT_ARRAY(1, in, (rank+1)*i);
     INIT_ARRAY(1, out, -1);
-    MT_CYCLE_BEGIN
-        DCCLAllReduceWrapper::singleton.DCCL_Allreduce(in, out, count, type, comm);
-    MT_CYCLE_END_NOBARRIER
+    double true_time = get_time();
+    DCCLAllReduceWrapper::singleton.DCCL_Allreduce(in, out, count);
+    true_time = get_time() - true_time;
+    odata->execution_time = true_time;
     return 1;
 }
 
